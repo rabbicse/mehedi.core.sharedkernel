@@ -1,3 +1,6 @@
+[![Nuget](https://img.shields.io/nuget/v/Mehedi.Core.SharedKernel)]([https://www.nuget.org/packages/PackageName](https://www.nuget.org/packages/Mehedi.Core.SharedKernel/))
+[![Nuget](https://img.shields.io/nuget/dt/Mehedi.Core.SharedKernel)]([https://www.nuget.org/packages/PackageName](https://www.nuget.org/packages/Mehedi.Core.SharedKernel/))
+
 # Mehedi.Core.SharedKernel
 Some useful base classes and interfaces, mainly used with the Core or Domain layer inside CleanArchitecture template. Also, a template to make your own Core or Domain layer SharedKernel nuget package.
 
