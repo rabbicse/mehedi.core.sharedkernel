@@ -8,8 +8,15 @@
     <Authors>Md Mehedi Hasan</Authors>
     <Description>Some useful base classes and interfaces, mainly used with the Domain layer inside Clean Architecture or Vertical Slice Architecture template. </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/rabbicse/mehedi.application.sharedkernel</RepositoryUrl>
+    <RepositoryUrl>https://github.com/rabbicse/mehedi.core.sharedkernel</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.2.0" />
