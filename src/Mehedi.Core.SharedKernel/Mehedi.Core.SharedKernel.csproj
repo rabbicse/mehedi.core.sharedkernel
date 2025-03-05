@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>Md Mehedi Hasan</Authors>
     <Description>Some useful base classes and interfaces, mainly used with the Domain layer inside Clean Architecture or Vertical Slice Architecture template. </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -18,5 +18,5 @@
   <ItemGroup>
     <PackageReference Include="MediatR" />
   </ItemGroup>
-
+  
 </Project>
