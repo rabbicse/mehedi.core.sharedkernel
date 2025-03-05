@@ -6,14 +6,14 @@ namespace Mehedi.Core.SharedKernel;
 /// <summary>
 /// Enumeration
 /// </summary>
-public abstract class Enumeration : IComparable
+public abstract class Enumerations : IComparable
 {
     [Required]
     public string Name { get; private set; }
 
     public int Id { get; private set; }
 
-    protected Enumeration(int id, string name) => (Id, Name) = (id, name);
+    protected Enumerations(int id, string name) => (Id, Name) = (id, name);
 
     public override string ToString() => Name;
 
@@ -22,7 +22,7 @@ public abstract class Enumeration : IComparable
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static IEnumerable<T> GetAll<T>() where T : Enumeration =>
+    public static IEnumerable<T> GetAll<T>() where T : Enumerations =>
         typeof(T).GetFields(BindingFlags.Public |
                             BindingFlags.Static |
                             BindingFlags.DeclaredOnly)
@@ -34,18 +34,18 @@ public abstract class Enumeration : IComparable
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj) // Allow nullable object
     {
-        if (obj is not Enumeration otherValue)
+        if (obj is null) return false; // Explicit null check
+
+        if (obj is not Enumerations otherValue)
         {
             return false;
         }
 
-        var typeMatches = GetType().Equals(obj.GetType());
-        var valueMatches = Id.Equals(otherValue.Id);
-
-        return typeMatches && valueMatches;
+        return GetType() == obj.GetType() && Id == otherValue.Id;
     }
+
 
     /// <summary>
     /// GetHashCode
@@ -59,11 +59,11 @@ public abstract class Enumeration : IComparable
     /// <param name="firstValue"></param>
     /// <param name="secondValue"></param>
     /// <returns></returns>
-    public static int AbsoluteDifference(Enumeration firstValue, Enumeration secondValue)
-    {
-        var absoluteDifference = Math.Abs(firstValue.Id - secondValue.Id);
-        return absoluteDifference;
-    }
+    public static int AbsoluteDifference(Enumerations? firstValue, Enumerations? secondValue) =>
+        Math.Abs((firstValue?.Id ?? throw new ArgumentNullException(nameof(firstValue))) -
+                 (secondValue?.Id ?? throw new ArgumentNullException(nameof(secondValue))));
+
+
 
     /// <summary>
     /// FromValue
@@ -71,7 +71,7 @@ public abstract class Enumeration : IComparable
     /// <typeparam name="T"></typeparam>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static T FromValue<T>(int value) where T : Enumeration
+    public static T FromValue<T>(int value) where T : Enumerations
     {
         var matchingItem = Parse<T, int>(value, "value", item => item.Id == value);
         return matchingItem;
@@ -83,7 +83,7 @@ public abstract class Enumeration : IComparable
     /// <typeparam name="T"></typeparam>
     /// <param name="displayName"></param>
     /// <returns></returns>
-    public static T FromDisplayName<T>(string displayName) where T : Enumeration
+    public static T FromDisplayName<T>(string displayName) where T : Enumerations
     {
         var matchingItem = Parse<T, string>(displayName, "display name", item => item.Name == displayName);
         return matchingItem;
@@ -99,20 +99,67 @@ public abstract class Enumeration : IComparable
     /// <param name="predicate"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
-    private static T Parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumeration
+    private static T Parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumerations
     {
         var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 
-        if (matchingItem == null)
-            throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
-
-        return matchingItem;
+        return matchingItem ?? throw new InvalidOperationException($"'{value}' is not a valid {description} in {typeof(T)}");
     }
+
 
     /// <summary>
     /// CompareTo
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
-    public int CompareTo(object other) => Id.CompareTo(((Enumeration)other).Id);
+    public int CompareTo(object? obj)
+    {
+        if (obj is null)
+        {
+            throw new ArgumentNullException(nameof(obj), "Cannot compare to null.");
+        }
+
+        if (obj is not Enumerations enumeration)
+        {
+            throw new ArgumentException($"Object must be of type {nameof(Enumerations)}", nameof(obj));
+        }
+
+        return Id.CompareTo(enumeration.Id);
+    }
+
+
+    public static bool operator ==(Enumerations left, Enumerations right)
+    {
+        if (ReferenceEquals(left, null))
+        {
+            return ReferenceEquals(right, null);
+        }
+
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Enumerations left, Enumerations right)
+    {
+        return !(left == right);
+    }
+
+    public static bool operator <(Enumerations left, Enumerations right)
+    {
+        return ReferenceEquals(left, null) ? !ReferenceEquals(right, null) : left.CompareTo(right) < 0;
+    }
+
+    public static bool operator <=(Enumerations left, Enumerations right)
+    {
+        return ReferenceEquals(left, null) || left.CompareTo(right) <= 0;
+    }
+
+    public static bool operator >(Enumerations left, Enumerations right)
+    {
+        return !ReferenceEquals(left, null) && left.CompareTo(right) > 0;
+    }
+
+    public static bool operator >=(Enumerations left, Enumerations right)
+    {
+        return ReferenceEquals(left, null) ? ReferenceEquals(right, null) : left.CompareTo(right) >= 0;
+    }
 }

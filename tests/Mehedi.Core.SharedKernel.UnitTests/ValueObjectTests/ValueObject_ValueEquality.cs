@@ -2,7 +2,11 @@
 
 namespace Mehedi.Core.SharedKernel.UnitTests.ValueObjectTests;
 
+#pragma warning disable CA1515 // Consider making public types internal
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 public class ValueObject_ValueEquality
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore CA1515 // Consider making public types internal
 {
     [Fact]
     public void WithSameValuesAreEqual()

@@ -3,20 +3,24 @@
 /// <summary>
 /// Represents an abstract base entity class.
 /// </summary>
-public abstract class BaseEntity : IEntity<Guid>
+public abstract class BaseEntity<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
 {
     private readonly List<BaseDomainEvent> _domainEvents = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseEntity"/> class.
     /// </summary>
-    protected BaseEntity() => Id = Guid.NewGuid();
+#pragma warning disable CA2214 // Do not call overridable methods in constructors
+#pragma warning disable S1699 // Constructors should only call non-overridable methods
+    protected BaseEntity() => Id = GenerateNewId();
+#pragma warning restore S1699 // Constructors should only call non-overridable methods
+#pragma warning restore CA2214 // Do not call overridable methods in constructors
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseEntity"/> class with the specified identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the entity.</param>
-    protected BaseEntity(Guid id) => Id = id;
+    protected BaseEntity(TKey id) => Id = id;
 
     /// <summary>
     /// Gets the domain events associated with this entity.
@@ -27,7 +31,7 @@ public abstract class BaseEntity : IEntity<Guid>
     /// <summary>
     /// Gets the unique identifier of this entity.
     /// </summary>
-    public Guid Id { get; private init; }
+    public TKey Id { get; private init; }
 
     /// <summary>
     /// Adds a domain event to the entity.
@@ -39,4 +43,9 @@ public abstract class BaseEntity : IEntity<Guid>
     /// Clears all the domain events associated with this entity.
     /// </summary>
     public void ClearDomainEvents() => _domainEvents.Clear();
+
+    /// <summary>
+    /// Generates a new identifier for the entity (override for specific types).
+    /// </summary>
+    protected abstract TKey GenerateNewId();
 }

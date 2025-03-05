@@ -3,7 +3,9 @@
     /// <summary>
     /// This is the base interface for all entities
     /// </summary>
+#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IEntity;
+#pragma warning restore CA1040 // Avoid empty interfaces
 
     /// <summary>
     /// This is the base interface for all entities with a key.

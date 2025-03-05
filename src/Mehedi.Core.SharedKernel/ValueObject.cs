@@ -11,14 +11,15 @@ public abstract class ValueObject
     /// <param name="left"></param>
     /// <param name="right"></param>
     /// <returns></returns>
-    protected static bool EqualOperator(ValueObject left, ValueObject right)
+    protected static bool EqualOperator(ValueObject? left, ValueObject? right)
     {
-        if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
         {
-            return false;
+            return ReferenceEquals(left, right);
         }
-        return ReferenceEquals(left, null) || left.Equals(right);
+        return left.Equals(right);
     }
+
 
     /// <summary>
     /// NotEqualOperator: To check if two value objects are not equal
@@ -42,17 +43,19 @@ public abstract class ValueObject
     /// </summary>
     /// <param name="obj"></param>
     /// <returns></returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
-        if (obj == null || obj.GetType() != GetType())
+        if (obj is null || obj.GetType() != GetType()) // Check for null first
         {
             return false;
         }
 
-        var other = (ValueObject)obj;
+        var other = obj as ValueObject; // Safely cast after null check
 
-        return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        return other is not null && GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
+
+
 
     /// <summary>
     /// GetHashCode: Override GetHashCode method

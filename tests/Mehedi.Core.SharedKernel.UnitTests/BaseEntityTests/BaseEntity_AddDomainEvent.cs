@@ -2,11 +2,15 @@
 
 namespace Mehedi.Core.SharedKernel.UnitTests.BaseEntityTests;
 
+#pragma warning disable CA1515 // Consider making public types internal
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 public class BaseEntity_AddDomainEvent
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore CA1515 // Consider making public types internal
 {
-    private class TestDomainEvent : BaseDomainEvent { }
+    private record TestDomainEvent : BaseDomainEvent { }
 
-    private class TestEntity : BaseEntity
+    private class TestEntity : BaseEntity<Guid>
     {
         public void AddTestDomainEvent()
         {
@@ -14,6 +18,11 @@ public class BaseEntity_AddDomainEvent
 
             // Add domain events
             AddDomainEvent(domainEvent);
+        }
+
+        protected override Guid GenerateNewId()
+        {
+            return Guid.NewGuid();
         }
     }
 

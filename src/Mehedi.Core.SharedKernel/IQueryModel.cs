@@ -3,7 +3,9 @@
 /// <summary>
 /// Represents the query model interface.
 /// </summary>
+#pragma warning disable CA1040 // Avoid empty interfaces
 public interface IQueryModel;
+#pragma warning restore CA1040 // Avoid empty interfaces
 
 /// <summary>
 /// Represents the interface for a query model with a generic key type.

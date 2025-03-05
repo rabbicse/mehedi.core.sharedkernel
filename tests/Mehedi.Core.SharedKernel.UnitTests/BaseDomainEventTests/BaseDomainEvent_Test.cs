@@ -2,9 +2,13 @@
 
 namespace Mehedi.Core.SharedKernel.UnitTests.BaseDomainEventTests;
 
+#pragma warning disable CA1515 // Consider making public types internal
+#pragma warning disable CA1707 // Identifiers should not contain underscores
 public class BaseDomainEvent_Test
+#pragma warning restore CA1707 // Identifiers should not contain underscores
+#pragma warning restore CA1515 // Consider making public types internal
 {
-    private class TestDomainEvent : BaseDomainEvent { }
+    private record TestDomainEvent : BaseDomainEvent { }
 
     [Fact]
     public void SetOccurredOnToCurrentDateTime()

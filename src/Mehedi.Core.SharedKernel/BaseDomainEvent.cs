@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a base event.
 /// </summary>
-public abstract class BaseDomainEvent : IDomainEvent
+public abstract record BaseDomainEvent : IDomainEvent
 {
     /// <summary>
     /// Gets the type of the message.
