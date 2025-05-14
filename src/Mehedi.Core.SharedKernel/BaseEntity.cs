@@ -31,6 +31,9 @@ public abstract class BaseEntity<TKey> : BaseEntity, IEntity<TKey> where TKey : 
     protected abstract TKey GenerateNewId();
 }
 
+/// <summary>
+/// BaseEntity without TKey
+/// </summary>
 public abstract class BaseEntity 
 {
     private readonly List<BaseDomainEvent> _domainEvents = [];
