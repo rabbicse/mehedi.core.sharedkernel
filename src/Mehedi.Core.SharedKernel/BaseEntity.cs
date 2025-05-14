@@ -3,10 +3,8 @@
 /// <summary>
 /// Represents an abstract base entity class.
 /// </summary>
-public abstract class BaseEntity<TKey> : IEntity<TKey> where TKey : IEquatable<TKey>
-{
-    private readonly List<BaseDomainEvent> _domainEvents = [];
-
+public abstract class BaseEntity<TKey> : BaseEntity, IEntity<TKey> where TKey : IEquatable<TKey>
+{    
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseEntity"/> class.
     /// </summary>
@@ -23,15 +21,24 @@ public abstract class BaseEntity<TKey> : IEntity<TKey> where TKey : IEquatable<T
     protected BaseEntity(TKey id) => Id = id;
 
     /// <summary>
+    /// Gets the unique identifier of this entity.
+    /// </summary>
+    public TKey Id { get; private init; }
+
+    /// <summary>
+    /// Generates a new identifier for the entity (override for specific types).
+    /// </summary>
+    protected abstract TKey GenerateNewId();
+}
+
+public abstract class BaseEntity 
+{
+    private readonly List<BaseDomainEvent> _domainEvents = [];
+    /// <summary>
     /// Gets the domain events associated with this entity.
     /// </summary>
     /// 
     public IEnumerable<BaseDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-    /// <summary>
-    /// Gets the unique identifier of this entity.
-    /// </summary>
-    public TKey Id { get; private init; }
 
     /// <summary>
     /// Adds a domain event to the entity.
@@ -43,9 +50,4 @@ public abstract class BaseEntity<TKey> : IEntity<TKey> where TKey : IEquatable<T
     /// Clears all the domain events associated with this entity.
     /// </summary>
     public void ClearDomainEvents() => _domainEvents.Clear();
-
-    /// <summary>
-    /// Generates a new identifier for the entity (override for specific types).
-    /// </summary>
-    protected abstract TKey GenerateNewId();
-}
+} 
