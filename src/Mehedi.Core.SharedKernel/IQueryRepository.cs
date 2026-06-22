@@ -9,11 +9,11 @@ public interface IQueryRepository<TQueryModel, in TKey>
     where TQueryModel : IQueryModel<TKey>
     where TKey : IEquatable<TKey>
 {
-    /// <summary>Returns all records and total count.</summary>
-    Task<(long Total, IEnumerable<TQueryModel> Items)> GetAllCollectionAsync(CancellationToken cancellationToken = default);
+    /// <summary>Returns all records and the total count.</summary>
+    Task<PagedResult<TQueryModel>> GetAllCollectionAsync(CancellationToken cancellationToken = default);
 
-    /// <summary>Returns a page of records and total count.</summary>
-    Task<(long Total, IEnumerable<TQueryModel> Items)> GetCollectionAsync(int pageNumber = 1, int pageSize = 100, CancellationToken cancellationToken = default);
+    /// <summary>Returns a single page of records and the total count.</summary>
+    Task<PagedResult<TQueryModel>> GetCollectionAsync(int pageNumber = 1, int pageSize = 100, CancellationToken cancellationToken = default);
 
     /// <summary>Returns the query model with the given key, or <c>null</c> if not found.</summary>
     Task<TQueryModel?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);

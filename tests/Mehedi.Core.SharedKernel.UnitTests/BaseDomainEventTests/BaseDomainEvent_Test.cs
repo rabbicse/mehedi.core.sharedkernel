@@ -8,7 +8,7 @@ public class BaseDomainEvent_Test
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 #pragma warning restore CA1515 // Consider making public types internal
 {
-    private sealed record TestDomainEvent() : BaseDomainEvent(nameof(TestDomainEvent), Guid.Empty);
+    private sealed record TestDomainEvent() : BaseDomainEvent(nameof(TestDomainEvent), Guid.Empty.ToString());
 
     [Fact]
     public void SetOccurredOnToCurrentDateTime()

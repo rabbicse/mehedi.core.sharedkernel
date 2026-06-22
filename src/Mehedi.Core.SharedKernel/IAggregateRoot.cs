@@ -1,8 +1,15 @@
-﻿namespace Mehedi.Core.SharedKernel;
+namespace Mehedi.Core.SharedKernel;
 
 /// <summary>
-/// Represents an interface for aggregate roots.
+/// Marker interface for aggregate roots.
+/// Aggregate roots own a collection of domain events that are dispatched after the
+/// unit of work completes.
 /// </summary>
-#pragma warning disable CA1040 // Avoid empty interfaces
-public interface IAggregateRoot { }
-#pragma warning restore CA1040 // Avoid empty interfaces
+public interface IAggregateRoot
+{
+    /// <summary>Domain events raised by this aggregate since the last dispatch.</summary>
+    IEnumerable<IDomainEvent> DomainEvents { get; }
+
+    /// <summary>Clears all pending domain events (call after dispatching).</summary>
+    void ClearDomainEvents();
+}

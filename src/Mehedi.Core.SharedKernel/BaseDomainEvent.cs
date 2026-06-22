@@ -4,7 +4,7 @@
 /// Represents a base event.
 /// </summary>
 #pragma warning disable CA1708 // Identifiers should differ by more than case
-public abstract record BaseDomainEvent(string? messageType, Guid aggregateId) : IDomainEvent
+public abstract record BaseDomainEvent(string? messageType, string aggregateId) : IDomainEvent
 #pragma warning restore CA1708 // Identifiers should differ by more than case
 {
     /// <summary>
@@ -13,9 +13,9 @@ public abstract record BaseDomainEvent(string? messageType, Guid aggregateId) : 
     public string? MessageType { get; protected init; } = messageType;
 
     /// <summary>
-    /// Gets the aggregate ID.
+    /// Gets the aggregate ID as a string, supporting Guid, long, or any other key type.
     /// </summary>
-    public Guid AggregateId { get; protected init; } = aggregateId;
+    public string AggregateId { get; protected init; } = aggregateId;
 
     /// <summary>
     /// Gets the date and time when the event occurred (UTC).

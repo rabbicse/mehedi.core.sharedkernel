@@ -8,7 +8,7 @@ public class BaseEntity_ClearDomainEvents
 #pragma warning restore CA1707
 #pragma warning restore CA1515
 {
-    private sealed record TestEvent() : BaseDomainEvent(nameof(TestEvent), Guid.Empty);
+    private sealed record TestEvent() : BaseDomainEvent(nameof(TestEvent), Guid.Empty.ToString());
 
     private sealed class TestEntity : BaseEntity<Guid>
     {

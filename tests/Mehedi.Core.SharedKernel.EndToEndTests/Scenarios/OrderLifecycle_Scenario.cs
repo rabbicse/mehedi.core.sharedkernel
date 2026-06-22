@@ -18,13 +18,13 @@ public class OrderLifecycle_Scenario
     // ── Domain ────────────────────────────────────────────────────────────────
 
     private record OrderPlaced(Guid OrderId, string Customer, decimal Total)
-        : BaseDomainEvent(nameof(OrderPlaced), OrderId);
+        : BaseDomainEvent(nameof(OrderPlaced), OrderId.ToString());
 
     private record OrderCancelled(Guid OrderId, string Reason)
-        : BaseDomainEvent(nameof(OrderCancelled), OrderId);
+        : BaseDomainEvent(nameof(OrderCancelled), OrderId.ToString());
 
     private record ItemAdded(Guid OrderId, string Sku, int Qty, decimal UnitPrice)
-        : BaseDomainEvent(nameof(ItemAdded), OrderId);
+        : BaseDomainEvent(nameof(ItemAdded), OrderId.ToString());
 
     private sealed class Order : BaseEntity<Guid>, IAggregateRoot
     {
