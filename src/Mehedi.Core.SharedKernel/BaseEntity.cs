@@ -36,18 +36,18 @@ public abstract class BaseEntity<TKey> : BaseEntity, IEntity<TKey> where TKey : 
 /// </summary>
 public abstract class BaseEntity 
 {
-    private readonly List<BaseDomainEvent> _domainEvents = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
+
     /// <summary>
     /// Gets the domain events associated with this entity.
     /// </summary>
-    /// 
-    public IEnumerable<BaseDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public IEnumerable<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     /// <summary>
     /// Adds a domain event to the entity.
     /// </summary>
     /// <param name="domainEvent">The domain event to add.</param>
-    protected void AddDomainEvent(BaseDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
+    protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
     /// <summary>
     /// Clears all the domain events associated with this entity.

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 namespace Mehedi.Core.SharedKernel;
@@ -13,21 +14,23 @@ public abstract class Enumerations : IComparable
 
     public int Id { get; private set; }
 
+    private static readonly ConcurrentDictionary<Type, object> _cache = new();
+
     protected Enumerations(int id, string name) => (Id, Name) = (id, name);
 
     public override string ToString() => Name;
 
     /// <summary>
-    /// GetAll
+    /// GetAll — results are cached after the first call per type.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     public static IEnumerable<T> GetAll<T>() where T : Enumerations =>
-        typeof(T).GetFields(BindingFlags.Public |
-                            BindingFlags.Static |
-                            BindingFlags.DeclaredOnly)
-                    .Select(f => f.GetValue(null))
-                    .Cast<T>();
+        (IEnumerable<T>)_cache.GetOrAdd(typeof(T), static t =>
+            t.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
+             .Select(f => f.GetValue(null))
+             .Cast<T>()
+             .ToList());
 
     /// <summary>
     /// Check equality of objects

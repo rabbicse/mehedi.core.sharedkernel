@@ -1,67 +1,40 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 
 namespace Mehedi.Core.SharedKernel;
-
 
 /// <summary>
 /// Represents a repository that allows write-only operations on entities.
 /// </summary>
-/// <typeparam name="TEntity"></typeparam>
-/// <typeparam name="TKey"></typeparam>
-public interface ICommandRepository<TEntity, in TKey> : IDisposable where TEntity : IEntity<TKey> where TKey : IEquatable<TKey>
+/// <typeparam name="TEntity">The entity type.</typeparam>
+/// <typeparam name="TKey">The entity key type.</typeparam>
+public interface ICommandRepository<TEntity, in TKey> where TEntity : IEntity<TKey> where TKey : IEquatable<TKey>
 {
+    /// <summary>Inserts a single entity.</summary>
+    Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+    /// <summary>Inserts multiple entities.</summary>
+    Task<IEnumerable<TEntity>> AddAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
+    /// <summary>Updates a single entity.</summary>
+    Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+    /// <summary>Updates multiple entities.</summary>
+    Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
+    /// <summary>Deletes a single entity.</summary>
+    Task DeleteAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+    /// <summary>Deletes multiple entities.</summary>
+    Task DeleteAsync(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default);
+
+    /// <summary>Deletes the entity with the given key.</summary>
+    Task DeleteByIdAsync(TKey id, CancellationToken cancellationToken = default);
+
     /// <summary>
-    /// Insert data using EF
+    /// Returns the entity with the given key, or <c>null</c> if not found.
     /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task<TEntity> AddAsync(TEntity entity);
-    /// <summary>
-    /// Insert multiple data using EF
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task<IEnumerable<TEntity>> AddAsync(IEnumerable<TEntity> entity);
-    /// <summary>
-    /// Update data using EF
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task<TEntity> UpdateAsync(TEntity entity);
-    /// <summary>
-    /// Update Multiple data using EF
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task<IEnumerable<TEntity>> UpdateAsync(IEnumerable<TEntity> entity);
-    /// <summary>
-    /// Delete data using EF
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task DeleteAsync(TEntity entity);
-    /// <summary>
-    /// Delete multiple data using EF
-    /// </summary>
-    /// <param name="entity"></param>
-    /// <returns></returns>
-    Task DeleteAsync(IEnumerable<TEntity> entity);
-    /// <summary>
-    /// Delete By Id
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    Task<TEntity> DeleteByIdAsync(TKey id);
-    /// <summary>
-    /// Get by Id, It might be guid, long or anything
-    /// </summary>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    Task<TEntity> GetByIdAsync(TKey id);
-    /// <summary>
-    /// Get by expression
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <returns></returns>
-    Task<IReadOnlyList<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns all entities that satisfy the predicate.</summary>
+    Task<IReadOnlyList<TEntity>> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default);
 }

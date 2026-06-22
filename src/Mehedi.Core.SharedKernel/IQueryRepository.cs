@@ -1,5 +1,4 @@
-﻿namespace Mehedi.Core.SharedKernel;
-
+namespace Mehedi.Core.SharedKernel;
 
 /// <summary>
 /// Represents a read-only repository interface.
@@ -10,26 +9,12 @@ public interface IQueryRepository<TQueryModel, in TKey>
     where TQueryModel : IQueryModel<TKey>
     where TKey : IEquatable<TKey>
 {
-    /// <summary>
-    /// Gets the collection for the specified query model.
-    /// </summary>
-    /// <typeparam name="TQueryModel"></typeparam>
-    /// <returns></returns>
-    Task<(long, IEnumerable<TQueryModel>)> GetAllCollectionAsync();
-    /// <summary>
-    /// Gets the collection for the specified query model with page.
-    /// </summary>
-    /// <typeparam name="TQueryModel"></typeparam>
-    /// <param name="pageNumber"></param>
-    /// <param name="pageSize"></param>
-    /// <returns></returns>
-    Task<(long, IEnumerable<TQueryModel>)> GetCollectionAsync(int pageNumber = 1, int pageSize = 100);
-    /// <summary>
-    /// Gets the Query Model by id.
-    /// </summary>
-    /// <typeparam name="TQueryModel"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
-    /// <param name="id"></param>
-    /// <returns></returns>
-    Task<TQueryModel?> GetByIdAsync(TKey id);
+    /// <summary>Returns all records and total count.</summary>
+    Task<(long Total, IEnumerable<TQueryModel> Items)> GetAllCollectionAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>Returns a page of records and total count.</summary>
+    Task<(long Total, IEnumerable<TQueryModel> Items)> GetCollectionAsync(int pageNumber = 1, int pageSize = 100, CancellationToken cancellationToken = default);
+
+    /// <summary>Returns the query model with the given key, or <c>null</c> if not found.</summary>
+    Task<TQueryModel?> GetByIdAsync(TKey id, CancellationToken cancellationToken = default);
 }
