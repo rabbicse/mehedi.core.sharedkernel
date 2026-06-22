@@ -84,16 +84,13 @@ jobs:
           echo "NET8_VERSION=$TAG" >> $GITHUB_OUTPUT
           echo "NET10_VERSION=$((MAJOR + 1)).$SUFFIX" >> $GITHUB_OUTPUT
 
-      - name: Restore & Build
-        run: dotnet build Mehedi.Core.SharedKernel.slnx --configuration Release
-
+      # Each pack command restores and builds its own project with the correct version baked in.
       # Produces two separate packages:
       #   artifacts/Mehedi.Core.SharedKernel.<net8-version>.nupkg       (net8.0)
       #   artifacts/Mehedi.Core.SharedKernel.Net10.<net10-version>.nupkg (net10.0)
       - name: Pack net8.0 → Mehedi.Core.SharedKernel
         run: |
           dotnet pack src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj \
-            --no-build \
             --configuration Release \
             -p:Version=${{ steps.version.outputs.NET8_VERSION }} \
             --output ./artifacts
@@ -101,7 +98,6 @@ jobs:
       - name: Pack net10.0 → Mehedi.Core.SharedKernel.Net10
         run: |
           dotnet pack src/Mehedi.Core.SharedKernel.Net10/Mehedi.Core.SharedKernel.Net10.csproj \
-            --no-build \
             --configuration Release \
             -p:Version=${{ steps.version.outputs.NET10_VERSION }} \
             --output ./artifacts
