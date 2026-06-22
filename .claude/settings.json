@@ -9,7 +9,10 @@
       "Bash(git fetch *)",
       "Bash(git rebase *)",
       "Bash(git stash *)",
-      "Bash(git tag *)"
+      "Bash(git tag *)",
+      "Bash(gh run *)",
+      "PowerShell(gh run list --repo rabbicse/mehedi.core.sharedkernel --limit 5 --json \"status,conclusion,name,headBranch,event,databaseId\" 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\GitHub CLI\\\\gh.exe\" run list --repo rabbicse/mehedi.core.sharedkernel --limit 5 2>&1)"
     ]
   }
 }
