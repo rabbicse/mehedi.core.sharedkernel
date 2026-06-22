@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- This project targets net10.0 only and produces a separate NuGet package. -->
+    <!-- Source files are shared from the sibling Mehedi.Core.SharedKernel project. -->
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <PackageId>Mehedi.Core.SharedKernel.Net10</PackageId>
+    <!-- Version is injected by CI via -p:Version=$TAG. Local builds get 0.0.0-local. -->
+    <Version>0.0.0-local</Version>
+    <Authors>Md Mehedi Hasan</Authors>
+    <Description>Reusable DDD base classes for .NET 10. Includes net10-specific APIs (AddDomainEvents params ReadOnlySpan). For .NET 8 use Mehedi.Core.SharedKernel.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/rabbicse/mehedi.core.sharedkernel</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" />
+  </ItemGroup>
+
+  <!-- Share source files from the sibling net8 project directory. -->
+  <ItemGroup>
+    <Compile Include="..\Mehedi.Core.SharedKernel\*.cs" />
+  </ItemGroup>
+
+</Project>

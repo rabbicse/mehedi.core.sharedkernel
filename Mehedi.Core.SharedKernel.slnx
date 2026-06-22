@@ -1,14 +1,15 @@
 <Solution>
-  <Folder Name="src">
+  <Folder Name="/src/">
     <Project Path="src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj" />
+    <Project Path="src/Mehedi.Core.SharedKernel.Net10/Mehedi.Core.SharedKernel.Net10.csproj" />
   </Folder>
-  <Folder Name="tests">
+  <Folder Name="/tests/">
     <Project Path="tests/Mehedi.Core.SharedKernel.UnitTests/Mehedi.Core.SharedKernel.UnitTests.csproj" />
     <Project Path="tests/Mehedi.Core.SharedKernel.IntegrationTests/Mehedi.Core.SharedKernel.IntegrationTests.csproj" />
     <Project Path="tests/Mehedi.Core.SharedKernel.EndToEndTests/Mehedi.Core.SharedKernel.EndToEndTests.csproj" />
     <Project Path="tests/Mehedi.Core.SharedKernel.LoadTests/Mehedi.Core.SharedKernel.LoadTests.csproj" />
   </Folder>
-  <Folder Name="samples">
+  <Folder Name="/samples/">
     <Project Path="samples/OrderManagement/OrderManagement.csproj" />
   </Folder>
 </Solution>

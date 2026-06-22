@@ -5,12 +5,18 @@
 # Mehedi.Core.SharedKernel
 
 Reusable base classes and interfaces for **Domain-Driven Design (DDD)** in .NET.
-Targets **net8.0** and **net10.0** in a single NuGet package.
+Published as two packages — one per target framework.
 
 ## Installation
 
+**.NET 8:**
 ```bash
 dotnet add package Mehedi.Core.SharedKernel
+```
+
+**.NET 10:**
+```bash
+dotnet add package Mehedi.Core.SharedKernel.Net10
 ```
 
 ## What's included
@@ -140,12 +146,17 @@ order.ClearDomainEvents();
 ## Releasing a new version
 
 ```bash
-git tag v1.2.0 && git push --tags        # stable release
-git tag v1.2.0-rc.1 && git push --tags   # pre-release
+git tag v1.0.0 && git push --tags        # stable release
+git tag v1.0.0-rc.1 && git push --tags   # pre-release
 ```
 
-CI builds both TFMs, runs all tests, then publishes a single `.nupkg` containing
-`lib/net8.0/` and `lib/net10.0/` to NuGet.
+A single tag publishes **both** packages. The Net10 package version is always `(major+1).minor.patch`:
+
+| Tag | `Mehedi.Core.SharedKernel` | `Mehedi.Core.SharedKernel.Net10` |
+|-----|---------------------------|----------------------------------|
+| `v1.0.0` | 1.0.0 | 2.0.0 |
+| `v1.1.0` | 1.1.0 | 2.1.0 |
+| `v1.0.0-rc.1` | 1.0.0-rc.1 | 2.0.0-rc.1 |
 
 ## References
 
