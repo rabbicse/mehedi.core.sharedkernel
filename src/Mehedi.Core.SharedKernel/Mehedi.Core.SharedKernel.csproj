@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.1.1</Version>
+    <!-- Version is injected by CI via -p:Version=$TAG. Local builds get 0.0.0-local. -->
+    <Version>0.0.0-local</Version>
     <Authors>Md Mehedi Hasan</Authors>
     <Description>Some useful base classes and interfaces, mainly used with the Domain layer inside Clean Architecture or Vertical Slice Architecture template. </Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>

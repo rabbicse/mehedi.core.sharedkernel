@@ -1,17 +1,28 @@
-name: publish Mehedi.Core.SharedKernel to nuget
+name: CI / Publish Mehedi.Core.SharedKernel
 
+# Build + test on every push to master and on PRs.
+# Publish to NuGet only when a version tag (v*.*.*) is pushed.
+#
+# Release workflow:
+#   git tag v1.2.0 && git push --tags   → publishes 1.2.0 (stable)
+#   git tag v1.2.0-rc.1 && git push --tags → publishes 1.2.0-rc.1 (pre-release)
 on:
-  workflow_dispatch:
   push:
     branches:
       - master
-    paths:
-      - 'src/Mehedi.Core.SharedKernel/**'
+    tags:
+      - 'v[0-9]*'
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
-  publish:
-    name: build, test, and publish to nuget
+  # ── Build & Test ────────────────────────────────────────────────────────────
+  build-and-test:
+    name: Build & Test (net8 + net10)
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,33 +39,61 @@ jobs:
       - name: Restore
         run: dotnet restore
 
-      - name: Build (all target frameworks)
+      - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      - name: Test (unit + integration + e2e)
-        run: |
-          dotnet test tests/Mehedi.Core.SharedKernel.UnitTests --no-build --configuration Release --logger "trx" --collect:"XPlat Code Coverage"
-          dotnet test tests/Mehedi.Core.SharedKernel.IntegrationTests --no-build --configuration Release --logger "trx"
-          dotnet test tests/Mehedi.Core.SharedKernel.EndToEndTests --no-build --configuration Release --logger "trx"
+      - name: Unit Tests
+        run: dotnet test tests/Mehedi.Core.SharedKernel.UnitTests --no-build --configuration Release --logger "trx" --collect:"XPlat Code Coverage"
 
-      - name: Bump build version
-        id: bump
-        uses: vers-one/dotnet-project-version-updater@v1.6
+      - name: Integration Tests
+        run: dotnet test tests/Mehedi.Core.SharedKernel.IntegrationTests --no-build --configuration Release --logger "trx"
+
+      - name: E2E Tests
+        run: dotnet test tests/Mehedi.Core.SharedKernel.EndToEndTests --no-build --configuration Release --logger "trx"
+
+  # ── Pack & Publish ──────────────────────────────────────────────────────────
+  publish:
+    name: Pack & Publish to NuGet
+    needs: build-and-test
+    # Only runs when a version tag is pushed (e.g. v1.2.0 or v1.2.0-rc.1).
+    # Skipped on plain branch pushes, PRs, and manual workflow_dispatch.
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          file: "src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj"
-          version: bump-build
+          dotnet-version: 8.0.x
 
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull
-          git add src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj
-          git commit -m "Bump project version to ${{ steps.bump.outputs.newVersion }}"
-          git push
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
 
+      # Strip the leading 'v' from the tag:  v1.2.0 → 1.2.0
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Restore & Build with version
+        run: dotnet build --configuration Release -p:Version=${{ steps.version.outputs.VERSION }}
+
+      # Produces: artifacts/Mehedi.Core.SharedKernel.<version>.nupkg
+      # The .nupkg contains both lib/net8.0/ and lib/net10.0/ assemblies.
       - name: Pack
-        run: dotnet pack src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj --no-build --configuration Release --output ./artifacts
+        run: |
+          dotnet pack src/Mehedi.Core.SharedKernel/Mehedi.Core.SharedKernel.csproj \
+            --no-build \
+            --configuration Release \
+            -p:Version=${{ steps.version.outputs.VERSION }} \
+            --output ./artifacts
 
-      - name: Publish to nuget.org
-        run: dotnet nuget push ./artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Push to nuget.org
+        run: |
+          dotnet nuget push ./artifacts/*.nupkg \
+            --api-key ${{ secrets.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

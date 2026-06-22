@@ -18,8 +18,10 @@ public abstract record BaseDomainEvent(string? messageType, Guid aggregateId) : 
     public Guid AggregateId { get; protected init; } = aggregateId;
 
     /// <summary>
-    /// Gets the date and time when the event occurred.
+    /// Gets the date and time when the event occurred (UTC).
+    /// Defaults to <see cref="TimeProvider.System"/>; subclasses may override via
+    /// <c>with { OccurredOn = timeProvider.GetUtcNow().UtcDateTime }</c>.
     /// </summary>
-    public DateTime OccurredOn { get; private init; } = DateTime.UtcNow;
+    public DateTime OccurredOn { get; protected init; } = TimeProvider.System.GetUtcNow().UtcDateTime;
 
 }

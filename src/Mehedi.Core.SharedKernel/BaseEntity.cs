@@ -49,6 +49,17 @@ public abstract class BaseEntity
     /// <param name="domainEvent">The domain event to add.</param>
     protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
+#if NET9_0_OR_GREATER
+    /// <summary>
+    /// Adds multiple domain events in a single call (zero-allocation on .NET 9+).
+    /// </summary>
+    protected void AddDomainEvents(params ReadOnlySpan<IDomainEvent> domainEvents)
+    {
+        foreach (var evt in domainEvents)
+            _domainEvents.Add(evt);
+    }
+#endif
+
     /// <summary>
     /// Clears all the domain events associated with this entity.
     /// </summary>
