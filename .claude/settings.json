@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\mehedi\\\\.claude\\\\projects\\\\d--pc-backup-github-github-mehedi-core-sharedkernel\\\\memory\\\\\" -ErrorAction SilentlyContinue; if \\(-not \\(Test-Path \"C:\\\\Users\\\\mehedi\\\\.claude\\\\projects\\\\d--pc-backup-github-github-mehedi-core-sharedkernel\\\\memory\\\\MEMORY.md\"\\)\\) { \"MEMORY.md not found\" } else { Get-Content \"C:\\\\Users\\\\mehedi\\\\.claude\\\\projects\\\\d--pc-backup-github-github-mehedi-core-sharedkernel\\\\memory\\\\MEMORY.md\" })",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
