@@ -8,7 +8,7 @@ public class BaseEntity_AddDomainEvent
 #pragma warning restore CA1707 // Identifiers should not contain underscores
 #pragma warning restore CA1515 // Consider making public types internal
 {
-    private record TestDomainEvent : BaseDomainEvent { }
+    private sealed record TestDomainEvent() : BaseDomainEvent(nameof(TestDomainEvent), Guid.Empty);
 
     private class TestEntity : BaseEntity<Guid>
     {
